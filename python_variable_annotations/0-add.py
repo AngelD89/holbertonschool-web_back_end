@@ -1,5 +1,9 @@
 #!/usr/bin/env python3
-"""Module for a simple addition function with type annotations."""
+"""
+Module 0-add
+
+This is module that provides function 'add' and returns the sum of two float numbers.
+"""
 
 def add(a: float, b: float) -> float:
     """Return the sum of two floats."""
