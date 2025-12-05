@@ -1,4 +1,4 @@
-#!/usr/bin/env python3#!/
+#!/usr/bin/env python3
 """
 Simple pagination module
 """
@@ -11,6 +11,12 @@ def index_range(page: int, page_size: int) -> tuple:
     """
     Returns a tuple containing the start and end index for pagination.
     
+    Args:
+        page: The page number (1-indexed)
+        page_size: The number of items per page
+        
+    Returns:
+        A tuple of (start_index, end_index)
     """
     start_index = (page - 1) * page_size
     end_index = start_index + page_size
@@ -41,6 +47,12 @@ class Server:
         """
         Returns a page of the dataset.
         
+        Args:
+            page: The page number (default 1)
+            page_size: The number of items per page (default 10)
+            
+        Returns:
+            A list of rows for the requested page, or empty list if out of range
         """
         # Verify that both arguments are integers greater than 0
         assert isinstance(page, int) and page > 0, \
