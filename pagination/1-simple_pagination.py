@@ -10,17 +10,17 @@ from typing import List
 def index_range(page: int, page_size: int) -> tuple:
     """
     Returns a tuple containing the start and end index for pagination.
-    
+
     Args:
         page: The page number (1-indexed)
         page_size: The number of items per page
-        
+
     Returns:
         A tuple of (start_index, end_index)
     """
     start_index = (page - 1) * page_size
     end_index = start_index + page_size
-    
+
     return (start_index, end_index)
 
 
@@ -46,29 +46,21 @@ class Server:
     def get_page(self, page: int = 1, page_size: int = 10) -> List[List]:
         """
         Returns a page of the dataset.
-        
+
         Args:
             page: The page number (default 1)
             page_size: The number of items per page (default 10)
-            
+
         Returns:
-            A list of rows for the requested page, or empty list if out of range
+            A list of rows for the requested page, or empty list
         """
-        # Verify that both arguments are integers greater than 0
-        assert isinstance(page, int) and page > 0, \
-            "page must be an integer greater than 0"
-        assert isinstance(page_size, int) and page_size > 0, \
-            "page_size must be an integer greater than 0"
-        
-        # Get the dataset
+        assert isinstance(page, int) and page > 0
+        assert isinstance(page_size, int) and page_size > 0
+
         dataset = self.dataset()
-        
-        # Get the start and end indexes
         start_index, end_index = index_range(page, page_size)
-        
-        # Check if the start index is out of range
+
         if start_index >= len(dataset):
             return []
-        
-        # Return the appropriate page of the dataset
+
         return dataset[start_index:end_index]
