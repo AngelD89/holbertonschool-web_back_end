@@ -1,3 +1,10 @@
-export default function hasValuesFromArray(set, array) {
-  return array.every(element => set.has(element));
+export default cleanSet(set, startString) {
+	if (startString === '') {
+          return '';
+	}
+
+	return Array.from(set)
+	  .filter(value => value.startsWith(startString))
+	  .map(value => value.slice(startString.length))
+	  .join('-');
 }
