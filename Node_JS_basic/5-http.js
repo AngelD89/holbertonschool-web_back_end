@@ -1,61 +1,57 @@
 const http = require('http');
 const fs = require('fs');
 
+const database = process.argv[2];
+
 const app = http.createServer((req, res) => {
-  res.statusCode = 200;
   res.setHeader('Content-Type', 'text/plain');
 
   if (req.url === '/') {
+    res.statusCode = 200;
     res.end('Hello Holberton School!');
   } else if (req.url === '/students') {
-    const database = process.argv[2];
-
-    if (!database) {
-      res.statusCode = 400;
-      res.end('Database file not provided');
-      return;
-    }
+    res.statusCode = 200;
+    res.write('This is the list of our students\n');
 
     fs.readFile(database, 'utf8', (err, data) => {
       if (err) {
-        res.statusCode = 400;
         res.end('Cannot load the database');
         return;
       }
 
-      let output = 'This is the list of our students\n';
-
       const lines = data.split('\n');
-
-      // Remove header and filter out empty lines
-      const students = lines
-        .slice(1)
-        .filter((line) => line.trim().length > 0)
-        .map((line) => line.split(','));
-
-      output += `Number of students: ${students.length}\n`;
-
-      // Group students by field
+      const students = [];
       const fields = {};
-      students.forEach((student) => {
-        const field = student[3];
+
+      for (let i = 1; i < lines.length; i += 1) {
+        if (lines[i].trim() !== '') {
+          students.push(lines[i]);
+        }
+      }
+
+      res.write(`Number of students: ${students.length}\n`);
+
+      for (let i = 0; i < students.length; i += 1) {
+        const parts = students[i].split(',');
+        const firstname = parts[0];
+        const field = parts[parts.length - 1];
+
         if (!fields[field]) {
           fields[field] = [];
         }
-        fields[field].push(student[0]);
-      });
+        fields[field].push(firstname);
+      }
 
-      // Add count and list for each field
-      Object.keys(fields).sort().forEach((field) => {
-        const fieldStudents = fields[field];
-        output += `Number of students in ${field}: ${fieldStudents.length}. List: ${fieldStudents.join(', ')}\n`;
-      });
+      for (const field in fields) {
+        if (Object.prototype.hasOwnProperty.call(fields, field)) {
+          res.write(
+            `Number of students in ${field}: ${fields[field].length}. List: ${fields[field].join(', ')}\n`
+          );
+        }
+      }
 
-      res.end(output);
+      res.end();
     });
-  } else {
-    res.statusCode = 404;
-    res.end('Not Found');
   }
 });
 
