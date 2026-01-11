@@ -1,4 +1,4 @@
-import { readDatabase } from '../utils';
+import readDatabase from '../utils';
 
 class StudentsController {
   static getAllStudents(req, res) {
@@ -9,11 +9,13 @@ class StudentsController {
         let output = 'This is the list of our students\n';
 
         // Sort fields alphabetically (case insensitive)
-        const sortedFields = Object.keys(fields).sort((a, b) => a.toLowerCase().localeCompare(b.toLowerCase()));
+        const sortedFields = Object.keys(fields)
+          .sort((a, b) => a.toLowerCase().localeCompare(b.toLowerCase()));
 
         sortedFields.forEach((field) => {
           const students = fields[field];
-          output += `Number of students in ${field}: ${students.length}. List: ${students.join(', ')}\n`;
+          output += `Number of students in ${field}: ${students.length}. `;
+          output += `List: ${students.join(', ')}\n`;
         });
 
         res.status(200).send(output);
